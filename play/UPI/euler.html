@@ -1,0 +1,28 @@
+<body background="pi-bk.gif">
+<title>The Euler algorithm for common factor</title>
+<h1>The Euler algorithm for common factor</h1>
+To find the common factor of two numbers m and n we need to be able
+to evaluate remainders, or modular arithmetic.
+<p>
+We take our pair of integers, and generate a new pair, and from the new
+pair generate another, and so on until one member of the pair is zero.
+If the input numbers are m(1) and n(1) with m(1) > n(1), the algorithm is:
+<pre>
+	m(i+1) = n(i)
+	n(i+1) = m(i) mod n(i)
+</pre>
+After a few iterations, one of the n becomes zero, and the common factor
+that we seek is the corresponding m. If this common factor is 1, then the
+original numbers were coprime.
+<p>
+For example, to discover the common factor of 102 and 54 we generate this 
+sequence:
+<pre>
+102 54
+54 48 
+48 6
+6 0
+</pre>
+so that the common factor is 6.
+<hr>
+<i>Brought to you by <a href="http://www.ballandclaw.com">BallAndClaw.com</a></i>

@@ -1,0 +1,41 @@
+<body background="pi-bk.gif">
+<title>Probability of two numbers being Coprime</title>
+<h1>Probability of two numbers being Coprime</h1>
+
+Let us begin by observing that the probability of a large number being divisible
+by a prime p is 1/p. We specify "large" number to make sure it is bigger than p.
+The probability that two independently chosen large numbers are both divisible
+by p is then 1/p^2.
+<p>
+If the two numbers are coprime, then for each prime p, p does not divide both
+numbers. If we assume that being divisible by one prime is independent of
+being divisible by another, then the probability of the numbers being coprime
+is<br> <img src=zeta2.gif>.<p>
+Let us define a generalization of the reciprocal of this as the <i>Riemann zeta 
+function:</i><br>
+<img src=zeta.gif><br>
+where the product is over all primes less than our numbers. Assuming the numbers
+are large, and letting the product be over all primes, we can define this 
+as the zeta function. It turns out that the zeta function can also be written
+as a sum:
+<img src=zetasum.gif><br>
+<p>
+This relationship can be proved by expanding each term in the product
+as a power series. When the power series are multiplied together, we use
+the fundamental theorem of arithmetic, that each integer is expressible
+as a product of powers of primes, and each product of powers of primes 
+represnts just one integer. This product formula for the zeta function provides
+a bridge from the properties of certain integers (prime numbers), to a 
+function that depends on a real number (actually a complex number), which 
+may be examined with the powerful tools of calculus and analytic function theory.
+<p>
+The value of the zeta function at s=2 is then the reciprocal of the probability
+that we seek. 
+Taking a function like this:<br>
+<img src=quad.gif> <br>
+and expanding it as a Fourier series can provide a value for zeta(2). 
+The functionis piecewise quadratic but also periodic, and the value of the
+Fourier series at the cusp shows that zeta(2) is <img src=pi26.gif>, so that
+the reciprocal of this is the probability of two large numbers being coprime.
+<hr>
+<i>Brought to you by <a href="http://www.ballandclaw.com">BallAndClaw.com</a></i>
