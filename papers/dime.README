@@ -1,0 +1,71 @@
+----
+DIME
+----
+This is some installation notes that come with the DIME software.
+DIME is public domain software.
+
+DIME means Distributed Irregular Mesh Environment, and is
+a programming environment for creating unstructured triangular 
+meshes and doing calculations on the mesh.
+
+DIME may be run interactively with graphics and menus, or in batch mode.
+A DIME application code or user code consists of a function called
+user_main() and a set of functions. The function user_main is called 
+first, and defines the set of user-written functions which may be 
+called from the menu or from a script file. The user code also defines
+C-structures user_node, user_elmt, and user_bdy, which are the data
+to be associated with each node, element, and boundary-node of the mesh.
+The user is responsible for manipulating these data.
+
+There are functions in the DIME library for adaptively refining and
+load-balancing the mesh, as well as contouring, arrow plots and other
+graphics.
+
+The domain for the mesh may be created with the tool "curvetool", and
+an initial mesh made with the tool "meshtool".
+
+For complete information read the 60-page manual available as described
+below.
+
+DIME runs on a UNIX workstation which support X-windows .
+
+DIME also runs on MIMD parallel computers which support the Express
+parallel programming environment, which is available from
+ParaSoft Inc., Pasadena, CA, (818) 792 9941.
+
+DIME is available by anonymous ftp from delilah.ccsf.caltech.edu,
+internet 131.215.145.137
+
+When ftp lets you in type
+ftp> cd dime
+ftp> mget dime.*
+
+You should have three files, 
+	dime.README	    -- this one
+	dime.src.tar.Z  -- source code for DIME
+	dime.doc.tar.Z  -- PostScript documentation for DIME
+
+Make a directory called `dime' and move the files into it.
+Type
+	zcat dime.src.tar | tar xfvo -
+	zcat dime.doc.tar | tar xfvo -
+
+If you want to read about DIME, print on a PostScript device 
+the file doc/dime.doc.ps, which is about 60 pages.
+
+To make everything for a sequential machine, you need to 
+edit the file dime.install in the top directory according to the
+machine you wish to compile for, then type
+	source dime.install
+in a csh environment.
+
+If all goes well, go to one of the examples and make it, for example
+	cd examples/simple
+	make
+
+To run on a sequential machine, type
+	simpleseq -f simple
+
+To run on a parallel machine, type
+	cubix -n4 -TX simpleN -f simple
+to use 4 processors of an Ncube machine.

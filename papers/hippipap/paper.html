@@ -1,0 +1,490 @@
+<TITLE>Optimization of Output Bandwidth from a Paragon</TITLE>
+<H1>Optimization of Output Bandwidth from a Paragon</H1>
+<hr>
+<a href="paper.ps">(Postscript available)</a>
+<HR>
+Roy Williams<A HREF="paper.html#foot1">(+)</A><BR>
+Caltech Concurrent Supercomputing Facilities, USA<BR>
+<tt>roy@ccsf.caltech.edu</tt><p>
+and <p>
+Wolfgang E. Nagel<A HREF="paper.html#foot2">(++)</A><BR>
+Zentralinstitut f&uuml;r Angewandte Mathematik, Forschungszentrum
+J&uuml;lich (KFA), Germany<BR>
+<tt>w.nagel@kfa-juelich.de</tt><p>
+<hr>
+<H2>Abstract</H2>
+<UNKNOWN>We examine the question of how to get maximum output
+bandwidth from a &quot;real&quot; application running on many
+nodes of a Paragon. We consider synchronization, flow control,
+message passing and partition management, and the use of the PARtools
+performance monitoring and visualization environment to understand
+and thus optimize these aspects. </UNKNOWN><BR>
+<UNKNOWN>The application is a &quot;digital VCR&quot;: each processor
+has in memory several compressed video frames, and these are to
+be decompressed, sent to the Hippi device, and output to a framebuffer
+at the fastest possible rate. While the Hippi processor is capable
+of 80 Mbyte/sec, the aggregate bandwidth from the computational
+processors is 21 Mbyte/sec.</UNKNOWN><BR>
+<UNKNOWN>In this communication-bound application, we find it optimal
+to have the communication device (the Hippi processor) to have
+control, with other processors acting a servers; rather than the
+processors having distributed control and the Hippi processor
+acting as server.</UNKNOWN><BR>
+<H2><A NAME="HDR 2 8">Introduction</A></H2>
+We have considered the question of how to extract the maximum
+bandwidth from a &quot;real&quot; application running on an Intel
+<a href="http://www.ccsf.caltech.edu/paragon/man.html">
+Paragon parallel supercomputer</a>. For the purposes of this paper,
+the Paragon consists of a large number of computational processors
+together with 
+<a href="http://www.ccsf.caltech.edu/paragon/docs/xpshippi.ps">
+Intel's Hippi processor</a>. The Hippi processor is also
+a computational processor, but is different in that it has a very
+fast connection to the Hippi hardware, and thence to the outside
+world. <p>
+<a href="http://gopher.lanl.gov/software/hippi">Hippi</a> is a 
+circuit-switched copper-based protocol with a peak
+theoretical speed of 100 MByte/sec. The Hippi processor on the
+Paragon can achieve most of this bandwidth (80 Mbyte/sec), but
+only when data resides in the 32 Mbyte memory of the Hippi processor
+itself. Of course, in a realistic scenario the data has to be
+sent from the compute nodes to the Hippi processor, and the question
+is: at what rate data can be extracted from the much larger aggregate
+memory (16 Gbyte) associated with the computational processors,
+such that data comes in a predetermined order? This depends on
+many factors, such as <p>
+
+<UL>
+<LI>how the data is computed on the originating processor, <BR>
+
+<LI>the amount of data per processor, <BR>
+
+<LI>the rate at which the receiver of the Hippi data can accept
+data, and <BR>
+
+<LI>the order in which the processors should contribute to the
+output stream.<BR>
+</UL>
+
+If the creation of the data at the compute processors is sufficiently
+slow, then of course the application is compute-bound, and we
+are no longer measuring the speed of the Hippi output stream,
+but of the computation. <p>
+To be specific, we have chosen a &quot;Digital VCR&quot; to be
+a reasonable compromise between a single-node application with
+no computation and a compute-bound parallel one. Initially, several
+frames of an animation are read from disk into each compute processor
+in a compressed form, then the frames are to be decompressed by
+the compute processors and sent to a Hippi framebuffer as fast
+as possible.<p>
+
+<H2>The Paragon</H2>
+The runs reported here were run on the 544-processor Paragon located
+at the California Institute of Technology and owned by the Concurrent
+Supercomputing Consortium. The machine has two Hippi processors,
+one running TCP/IP Hippi, and the other, which we used, producing
+Framing Protocol Hippi. The output was sent to an IOSC Hippi framebuffer
+which can accept data at full Hippi speed. The runs took place
+on April 5, 1994, with Release 1.1 of the Paragon system software,
+using 9 processors of the Paragon, one master and 8 slaves.<p>
+
+<H2>The PARtools performance analysis environment</H2>
+Below we describe some algorithms by which a collection of Paragon
+processors can decompress and send a sequence of frames to a framebuffer.
+When some of these were implemented, we found great variation
+in their performance, not only in terms of average frame rate,
+but also in other ways. The time interval between frames would
+alternate between very short and very long, or perhaps 20 frames
+would come quickly followed by a slowing down of the frame rate.
+Sometimes the frame rate would appear chaotic!<p>
+It was clear that we must see the internal workings of our algorithms
+in more detail, and for this we used the PARtools performance
+analysis environment. This <I>X window</I> based software was
+developed at KFA J&uuml;lich, Germany [3]. As well as trace file
+visualization, it provides facilities for multiprocessor simulation
+and benchmark control. PARvis, the visualization component of
+the PARtools environment, translates a given trace file into a
+variety of graphical views, e.g. state diagrams, activity charts,
+timeline displays, and statistics. PARvis has a powerful zooming
+feature which allows the user to identify problems at any level
+of detail, and it provides flexible filter operations to reduce
+the amount of information displayed. A detailed description of
+PARvis can be found in [4].<p>
+PARtools cooperates with the Intel-supplied IPD utility. The user
+does not need to change the source code in any way; indeed it
+is not even necessary to recompile to use PARtools. The code is
+run under IPD, with instrumentation switched on, and after the
+program exits, IPD writes out the trace file. Thereafter, the
+execution can be visualized using the kind of displays shown in
+the Figures of this paper, and in addition there are many other
+displays that we have not used for this analysis.<p>
+<H2><A NAME="HDR 2 9">Decompression</A></H2>
+Each frame is a 4-bytes-per-pixel image at a resolution of 640x512,
+so the size is 1.3 Mbyte. The decompression process is quite simple:
+it is because the frames that are to be displayed are monochrome
+(1 byte per pixel), so that the decompression is replication of
+this pixel for the red, green and blue components of the color
+frame. Using PARtools, we discover that this process takes about
+252 msec.<p>
+
+<H2>The Physical Hippi Processor</H2>
+Our first experiments used a single processor, which might be
+the Hippi processor, or it may be an &quot;ordinary&quot; computational
+processor. In the latter case, the data is routed through the
+mesh to the Hippi processor by means of the &quot;OSF Norma/IPC&quot;
+protocol without the user's knowledge _ the code is the same,
+although the mechanism is different. In the former case the user
+must be careful in specifying the group of physical processors
+(the &quot;partition&quot;) on which the application runs, to
+make sure that the application really is running on the Hippi
+processor.<p>
+When running on the Hippi processor, the output of a frame is
+achieved in 16 msec, but it takes 118 msec when running on an
+ordinary compute processor.<p>
+Thus a model of the single processor performance is that the time
+to output a frame is 252 msec if decompression is done, plus either
+16 msec or 118 msec for the Hippi transfer, depending on whether
+the single processor is the Hippi processor or not respectively.<p>
+
+<H2>Parallelism</H2>
+Suppose that the compressed video frames (0.3 Mbyte each) are
+equally distributed among many processors. How should we assign
+the frames to the processors?<p>
+It would not seem efficient for one processor to hold a large
+number of <I>consecutive</I> frames, since during transmission
+of these there would be nothing for any processor to do except
+for the one with the data and the one controlling the Hippi device,
+so the maximum parallelism would be 2. Thus let us assume that
+the frames are distributed in time, so that the first processor
+has the first frame, the second processor has the second frame,
+and so on. In other words, if the <I>p</I>'th processor of <I>P</I>
+processors takes the <I>n</I>'th frame then <I>p</I> = <I>n</I>
+mod <I>P</I>.<p>
+
+<H2>Synchronization and Flow Control Algorithms</H2>
+The simplest way to send data to the Hippi framebuffer is for
+each processor to open the Hippi device and write data to it.
+Unfortunately, this mechanism (Norma/IPC) is not only slow (see
+below), but also it does not scale with the number of processors
+unless effectively organized. Therefore, we have chosen two schemes
+for synchronization and flow control, and in both cases the fast
+NX messaging is used to transport data. First, we divide the processors
+into two categories:<p>
+
+<UL>
+<LI>a single <B>master processor </B>that opens the Hippi device,
+receives NX messages   containing the data, and writes the data
+to the Hippi device,<BR>
+
+<LI>all the other processors, the <B>slave processors,</B> which
+are responsible for reading the compressed data files from disk,
+uncompressing them, and sending NX messages to the master and
+thence to the Hippi device.<BR>
+</UL>
+
+Clearly we do not want all the slaves to send messages as fast
+as they can; the order of the displayed frames would be random,
+and besides the application would not be scalable, since for sufficiently
+many slaves the master would be overwhelmed by messages.<p>
+Second, we may give overall control of the application either
+to the slaves, in a distributed way, or to the master processor.
+In the following, we shall use the word &quot;baton&quot; to mean
+a message of zero length, which is sent only for synchronization
+purposes. Reception of a baton means &quot;please send your frame
+now&quot;.<p>
+
+<UL>
+<LI><B>slave control:</B> when a slave receives a baton, it sends
+a frame to   the master, then sends a baton to the next slave.
+Thus the master   is a server: receiving all the messages that
+come and passing them to   the Hippi hardware, while the slaves
+synchronize themselves.<BR>
+
+<LI><B>master control:</B> the master processor sends a baton
+to a slave, and   the slave responds with a frame. When that frame
+has been sent to   the Hippi, a baton is sent to the next slave,
+requesting its frame. Thus the slaves are servers waiting to respond
+to the receipt of a baton.<BR>
+</UL>
+
+While the slaves are waiting, they have enough time to do the
+decompression for the next frame, then wait for the next baton,
+so that the eventual output bandwidth from the Hippi board is
+independent of the decompression time.<p>
+Initially, it was our thought that the Hippi processor must be
+the natural bottleneck, since it is channelling data from all
+other processors. In this case, one would think that the slave
+controlled scheme would be the best algorithm since it reduces
+the work to be done by the master process. It turns out that this
+loss is more than adequately counteracted by the greater control
+over synchronization offered by keeping control with the master
+process.<p>
+
+<H2>Message Passing</H2>
+For passing the large messages we have used locally blocking sends
+and non-blocking receives. In Intel NX, these are the functions
+csend to send, and irecv/msgwait to receive. <p>
+When sending, the csend does not return until the message has
+been sent on its way and the buffer may be safely overwritten.
+Note that csend is <I>locally blocking</I>, not globally blocking:
+it may return before the message has arrived at the destination
+(just like mailing a letter in a mailbox).<p>
+The non-blocking receive takes place in two stages: first the
+receiving process states that it is ready to receive a certain
+kind of message into a given buffer using irecv (it &quot;posts
+a receive&quot;). This call returns quickly and the processor
+is free to do other work, so long as it does not disturb the receiving
+buffer. The second stage of the receive is the call to msgwait,
+which returns quickly if a matching message has already been received,
+otherwise blocks until such a message has been received.<p>
+<H2><A NAME="HDR 2 10">Double-Buffering</A></H2>
+The message reception and Hippi output at the master process may
+be overlapped by using two buffers, A and B: when the master has
+received a frame into buffer A, it posts a receive for buffer
+B, dispatches the contents of buffer A to the Hippi device, then
+waits for the completion of the receive on buffer B. The process
+then repeats, alternating the roles of A and B.<p>
+The description of double-buffering above assumes the slave control
+scheme, where the master is simply acting as a server. In the
+case of master control, a baton is passed to one of the slaves
+immediately after any receive is posted.<p>
+
+<H2>Results</H2>
+The three parallel algorithms that we have investigated are shown
+in <a href="p6.gif">
+Figure 1</a>: the slave-controlled and the single and double-buffered
+master controlled algorithms. We ran each of these with the master
+process running either on the physical Hippi processor or on an
+ordinary compute processor. The runs mentioned below correspond
+to the master process being on the Hippi processor.<p>
+
+<a href="p7.gif">
+Figure 2</a> shows a snapshot of the PARvis display from a run with
+slave control. Looking at the trace for &quot;Node 1&quot;, the
+master processor, we can see where frames are dispatched to the
+framebuffer. It is clear that after a few frames issued very quickly,
+the rest come quite slowly. The reason is <B>the message-passing
+bandwidth depends crucially on whether a receive has been posted
+before the send commences.</B> We can now see why the slave-controlled
+flow synchronization is unsuitable for the Digital VCR application.
+If the time to write a frame to Hippi is less than the time between
+frames arriving, then the master can always have the receive posted
+before the next frame is sent. But this is a very delicate balance:
+once the master falls behind once, then message-passing becomes
+very slow (because the receive is not posted). When a message
+is sent, the sender is finished with it before the receiver has
+the complete message (because the send is only <I>locally</I>
+blocking). Once this happens to the slave-controlled algorithm,
+it can never get back to the &quot;good&quot; state _ receives
+being posted before sends are initiated.<p>
+
+<a href="p8.gif>
+Figure 3</a> shows the single-buffered master controlled algorithm,
+with a programming error that causes a glitch in the frame rate.
+Using PARtools, we can point at the messages and see the bandwidths:
+26 Mbyte/sec if the receive is posted before the send, but only
+3.8 Mbyte/sec otherwise. The program (with error) is as follows:<p>
+
+<UL>
+<LI><B>Master:</B> Send baton to slave, then receive frame from
+slave.<BR>
+
+<LI><B>Slave:</B> Receive baton, then send frame to master.<BR>
+</UL>
+
+One would imagine that the receive would always be posted by the
+master before the slave has commenced sending the frame. This
+is not true, as can be seen in Figure 3. Because the Paragon runs
+Unix on each processor, processes can be interrupted or swapped
+out. In Figure 3, we can see that an interrupt of duration less
+than 1 msec has caused a delay in the program of roughly 300 msec,
+because it has caused the receive to be posted after the message
+began its journey. Thus the correct code for the master process
+is:<p>
+
+<UL>
+<LI><B>Master:</B> Post receive for frame, send baton to slave,
+wait for completion of receive frame from slave.<BR>
+</UL>
+
+The lesson to be learned is of course to <B>put the posting
+of a receive as far ahead as it can possibly be.</B><p>
+It is interesting to note in passing that we have demonstrated
+sensitive dependence on initial conditions: that is, a 1 msec
+timing change is amplified into a 300 msec timing difference.
+This is often a harbinger of chaos, and indeed during one of the
+runs (though unfortunately not an instrumented run) the frames
+appeared to be arriving at the framebuffer with very unpredictable
+order.<p>
+
+<a href="p9a.gif"> Figure 4a</a> and <a href="p9b.gif"> Figure 4b</a>
+demonstrate that the Hippi processor is not overlapping
+Hippi communication with NX message-passing. In each panel, there
+is a PARtools window for the master process (above), and one of
+the slaves (below). In the single-buffered case, the slave is
+in csend while the master is in msgwait; then the master is in
+hippi_write, while the slave is decompressing the next frame (labelled
+main). In the double-buffered case, the hippi_write and csend
+appear to be happening in parallel; the csend finishes and the
+hippi_write finishes later. But the total time to transmit the
+frame via NX and then output it by Hippi is essentially the same
+in both cases, as can be seen from the ruler windows to the right
+of the main windows, showing that there is little concurrency
+here.<p>
+Each Intel Paragon node board will be upgraded to a dual processor
+configuration in the near future; this together with a software
+upgrade should alleviate this problem.<p>
+
+<H2>A Timing Model</H2>
+First it should be mentioned that as well as doing instrumented
+runs, we also put some simple timing functionality into the program
+itself, to measure for example the average frames per second;
+we found that the program timing was quantitatively the same whether
+doing instrumented or &quot;simple&quot; runs. We conclude that
+the instrumentation is not unduly affecting what it is supposed
+to be measuring.<p>
+We now present the results of the runs as a table, where the columns
+show a run with the master process located at the Hippi processor,
+and at an ordinary compute node, respectively. These can be converted
+to megabytes per second knowing that the frame size is 640x512x4
+bytes.<p>
+<pre>
+Table 1:  Time per frame (milliseconds)
+----------------- ---------------------
+                            <B>Master is Hippi node</B>   <B>Master is compute node</B>  
+----------------------------------------------------------------------
+One processor, no decompression         16.5 msec (<B>80 MB/sec</B>)      118                     
+One processor, 
+with decompression                      267                        367
+
+9 processors, 
+slave control                            50, then 340              440
+
+9 processors, 
+single-buffered master control           63                        164 
+
+9 processors, 
+double-buffered master control           62 msec (<B>21 MB/sec</B>)       163 
+-----------------------------------------------------------------------
+</pre>
+These results can be modelled well with the following, stating
+that the time per frame is a sum of the following contributions:<p>
+
+<UL>
+<LI>Decompression time: In parallel operation, this time is effectively
+zero, since communication is the bottleneck, not decompression.
+When running on a single processor, this is 252 msec per frame
+per processor.<BR>
+
+<LI>Message-passing time: When the receive is posted before the
+send is initiated, the message-passing time is 47 msec, and if
+not, it is 323 msec. These times correspond to bandwidths of 28
+Mbyte/sec and 4 Mbyte/sec respectively.<BR>
+
+<LI>Hippi output time: When the master process is on the Hippi
+processor, this takes 16.5 msec, or on a compute node it takes
+118 msec. These correspond to bandwidths 80 Mbyte/sec and 11 Mbyte/sec
+respectively.<BR>
+</UL>
+
+While the foregoing makes it clear that the Hippi processor should
+be in charge of synchronization for the Digital VCR application,
+this is not necessarily true for a compute-bound application.
+In that case the frames will be arriving at the Hippi processor
+at a slower rate, so that a receive can always posted before the
+next frame is sent. It is only because our application is communication-bound
+that we should put control with the communication device (the
+Hippi processor).<p>
+
+<H2>Future Work</H2>
+
+<UL>
+<LI>We should remeasure the results of this paper on an upgraded
+Paragon (i860 communication processor and System software release
+1.2); we would hope to overlap Hippi output with message reception,
+and also to benefit from the increased message-passing bandwidth.<BR>
+
+<LI>Another project is to devise algorithms for getting the frames
+from long-term storage as quickly as possible, rather than just
+from processor memory. Such long-term storage could be the Paragon
+parallel file system, or a Hippi-connected RAID system.<BR>
+
+<LI>Now that we have measured output speed, the converse is of
+course input speed. Again this comes in two varieties, being reading
+from a Hippi source to the processor memories, or the total rate
+from the Hippi to the parallel file system. In the former case,
+there is an assumption that the processors can reduce the data
+to something manageable at a sufficient rate that storing the
+results is not the bottleneck.<BR>
+</UL>
+
+<H2>References</H2>
+1. <I>Paragon Users Guide,</I> Intel Scientific Supercomputer
+Division, 1993. Available on the World Wide Web at 
+<a href="http://www.ccsf.caltech.edu/paragon/docs/psug.ps">
+http://www.ccsf.caltech.edu/paragon/docs/psug.ps</a>
+<BR>
+2. <I>Paragon Hippi Manual,</I> Intel Scientific Supercomputer
+Division, 1993. Available on the World Wide Web at 
+<a href="http://www.ccsf.caltech.edu/paragon/docs/xpshippi.ps">
+http://www.ccsf.caltech.edu/paragon/docs/xpshippi.ps</a>
+<br>
+3. W. E. Nagel and A. Arnold, P<I>ARvis: Ein Werkzeug
+zur Visualisierung von parallelen Prozessen auf Mehrprozessorsytemen</I>,
+in Proc. 7 ITG/GI Fachtagung MMB'93 (1993) 178-187. Available
+by ftp from 
+<a href="ftp://ftp.zam.kfa-juelich.de/pub/zamdoc/ib-9302.ps">
+ftp.zam.kfa-juelich.de/pub/zamdoc/ib-9302.ps</a>
+<BR>
+4. A. Arnold, <I>PARvis: An X-based visualization environment
+for parallel programs, User's Guide,</I> Forschungszentrum J&uuml;lich
+(1994), to be published.
+<BR>
+
+<H2>Figure Captions</H2>
+<a href="p6.gif">
+<B>Figure 1:</B></a> Three flow control algorithms. Time is from left
+to right. The master processor is at the top, controlling the
+Hippi device, and the slaves below. The black arrows indicate
+the transmission of a 1.3 Mbyte frame as an NX message to the
+master, and thence to the framebuffer via Hippi. The grey arrows
+indicate a zero-byte &quot;baton&quot; message indicating to a
+slave that it should send its next frame.<p>
+
+<a href="p7.gif">
+<B>Figure 2: </B></a>The PARtools timeline display. &quot;Node 1&quot;
+is the master processor, and the other 8 are the slave processors.
+This is the slave-controlled algorithm: we see batons passing
+from slave to slave, and 1.3 Mbyte frames from slaves to the master.
+The first few frames are output very quickly, about 50ms per frame,
+then the rate slows down to about 350 ms per frame. The times
+taken by the master for writing to the Hippi device are shown
+above.<p>
+
+<a href="p8.gif">
+<B>Figure 3:</B></a> Receives must be posted before the message is
+sent. 
+In the top panel, Node 1 is the master, and we can see frames
+going to the master, and batons to the slaves. The part labelled
+&quot;main&quot; is frame decompression, overlapped with message-passing.
+The fast message (left) has the receive posted before the send,
+and the slow message has the receive posted after the send. Since
+there is no user code involved between sending the baton and posting
+the receive, we assume that an interrupt must be responsible.<p>
+
+<B>Figure 4:</B> The master processor cannot send Hippi and receive
+messages at the same time. The 
+<a href="p9a.gif">
+top panel</a> shows the single-buffered master control algorithm, and the 
+<a href="p9b.gif">
+lower panel</a> the double-buffered
+version. The message-passing and Hippi output together take about
+the same time.<p>
+
+<h3><a name="foot1">(+) Footnote</a></h3>RDW acknowledges the support of
+the CRPC (Center for Research in Parallel Computation) and CNRI (Center for
+National Research Initiatives).
+<h3><a name="foot2">(++) Footnote</a></h3>This
+paper was prepared while one author (WEN) was a visiting research associate
+at the Caltech Concurrent Supercomputing Facilities (CCSF), California
+Institute of Technology.

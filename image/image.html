@@ -1,0 +1,116 @@
+<title>Pictures</title>
+<body background="../_personal/background/29.gif" text="#ffffff" link="#a0a0ff" vlink="#8080f
+f">
+
+<h1>Scientific Pictures</h1>
+<h3>Roy Williams</h3>
+Click on the thumbnail for full-size image
+<hr>
+
+<a href=crab.jpg><img src=crab-s.jpg></a><br>
+This is the Crab Nebula in Orion, constructed as an overlay of the
+X-ray image from the Chandra observatory on an optical image from Palomar.
+(Also available is a 
+<a href=crablarge.jpg>2100x2100 jpg</a> and
+<a href=crablarge.tif>2100x2100 tif</a>).
+More information about the science of this image can be found <a href=
+http://chandra.harvard.edu/photo/0052/index.html>here</a>.
+<hr>
+
+<a href=top.gif><img src=pixy/top.gif></a>
+<a href=under.gif><img src=pixy/under.gif></a>
+<a href=middle.gif><img src=pixy/middle.gif></a>
+<a href=bottom.gif><img src=pixy/bottom.gif></a><br>
+These pictures show a parallel 3D adaptive unstructured mesh. 
+The first two images show the pressure on the outside of a pipe of square
+cross section, that has a slot in it. Fluid moves from the top right to the 
+bottom left; the main bow shock is reflected 
+multiple times as the fluid moves down the pipe.
+The third image shows the surface of the unstructured tetrahedral mesh
+that was used for the computation; the mesh has self-adapted to the pressure 
+gradient, meaning a finer mesh at the shocks. The fourth picture shows
+the decomposition of the mesh among 512 parallel processors: each colour
+represents a differentr processor. Adaptivity is evident here also, as
+each processor has an equal number of tetrahedral mesh cells.
+<i>(with John Flower)</i>
+<hr>
+<a href=cards.bistable.gif><img src=pixy/cards.bistable.gif></a>
+<a href=phases.gif><img src=pixy/phases.gif></a><br>
+These pictures show 2D triangular meshes adapted through a rigourous
+a posteriori error estimation. The equation being solved is the archetypal
+reaction-diffusion equation; the bistable equation has two stable states 
+separated by a thin transition region -- many thin black contour lines that
+merge into a single thick line. The mesh is adapted and load-balanced 
+as above.
+<i>(with Don Estep)</i>
+<hr>
+<a href=cub2.gif><img src=pixy/cub2.gif></a>
+<a href=cubes.gif><img src=pixy/cubes.gif></a><br>
+In converting a multiblock mesh into a tetrahedral mesh, each block must be 
+split into tetrahedra, inducing a splitting of the faces of the block into
+triangles. Here we see the five distinct ways in which this can be done, 
+together with two more splittings of the faces that do not correspond 
+to a volume splitting.
+<hr>
+<a href=d.anneal.gif><img src=pixy/d.anneal.gif></a>
+<a href=d.orb.gif><img src=pixy/d.orb.gif></a><br>
+This 2D area has been meshed and refined by the Dime software, then split
+among 32 processors of a parallel machine. The two pictures show the
+results of load-balancing by means of two algorithms: the first image by
+simulated annealing, the second by orthogonal recursive bisection. The quality 
+of the load-balancing, measured by the number of triangle pairs that
+are the same colour, is much better for the more expensive annealing 
+algorithm.
+<hr>
+<a href=eigen_explode.gif><img src=pixy/eigen_explode.gif></a>
+<a href=elmt4.gif><img src=pixy/elmt4.gif></a><br>
+These images show the results for a load-balancing algorithm based on
+eigenvectors of the adjacency matrix of the mesh graph. The mesh surrounds
+a simple airfoil. The first picture shows the eigenvector itself for the
+last stage of the load-balance process; the second image shows the result
+of the load-balance itself.
+<hr>
+<a href=pent.gif><img src=pixy/pent.gif></a>
+<a href=pent4.gif><img src=pixy/pent4.gif></a><br>
+These images show the results of a study of dynamic load balancing. A pair of 
+Gaussian peaks move randomly around the pentagon, and the adaptive mesh attempts
+to keep up with it, then the mesh load balance responds in turn to the
+adaptivity of the mesh.
+<hr>
+<a href=d.stress.gif><img src=pixy/d.stress.gif></a>
+<a href=hook.gif><img src=pixy/hook.gif></a>
+<a href=truss.gif><img src=pixy/truss.gif></a><br>
+Two-dimensional plane-strain computations, using an adaptive mesh.
+<hr>
+<a href=scram.gif><img src=pixy/scram.gif></a>
+<a href=wc.gif><img src=pixy/wc.gif></a>
+<a href=wc.mach3.gif><img src=pixy/wc.mach3.gif></a><br>
+Adaptive-mesh computation of compressible flow. The third pictures shows the
+adapted mesh as well as the pressure field.
+<hr>
+<a href=letter_s.mesh.gif><img src=pixy/letter_s.mesh.gif></a><br>
+This highly relaxed mesh surrounds a 2D shape. The mesh has been adapted 
+by solving a Laplace equation in the space, with the surface charge being
+proportional to the curvature of the surface.
+<hr>
+<a href=divepic.gif><img src=pixy/divepic.gif></a>
+<a href=divepic2.gif><img src=pixy/divepic2.gif></a>
+<a href=mesh.gif><img src=pixy/mesh.gif></a><br>
+Thes representations of three-dimensional unstructured meshes show the 
+different dimensionalities of the components: point, line, face, tet.
+<hr>
+<a href=naca_press.gif><img src=pixy/naca_press.gif></a>
+<a href=naca_mesh.gif><img src=pixy/naca_mesh.gif></a>
+<a href=naca_split.gif><img src=pixy/naca_split.gif></a><br>
+Unstructured mesh computations around a simple airfoil, with orthogonal 
+recursive bisection for the load balancing.
+<hr>
+<a href=tetra_ball.gif><img src=pixy/tetra_ball.gif></a>
+<a href=pin.gif><img src=pixy/pin.gif></a><br>
+These tetrahedral meshes filling a sphere look nice.
+<hr>
+<a href=coffin.gif><img src=pixy/coffin.gif></a><br>
+This reminds me of a body in a coffin surrounded by muslin.
+<hr>
+<i>Brought to you by <a href=http://www.cacr.caltech.edu/~roy>Roy Williams
+Clickery</a>.
