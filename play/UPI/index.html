@@ -7,7 +7,7 @@ efficient <a href=ramanujan.html>Ramanujan formulae</a>
 that can become thirty orders of magnitude more
 accurate with each additional term in the expansion, to the familiar
 but plodding result from the power-series expansion of arctan(1), for which
-more detail is <a href=../upi/pi.formulas.html>here</a>.
+more detail is <a href=../UPI/pi.formulas.html>here</a>.
 <p>
 This page is concerned not with finding a <i>more</i> efficient way to compute
 pi, since one would need to be extremely intelligent to do better than
@@ -36,7 +36,7 @@ cost to arrive at the approximation.
 The algorithm is based on the following two ideas:
 <UL>
 <LI>The probability of two large random integers being coprime (having no 
-common factor) is <img src=6opisq.gif>. <a href=coprime.html>A proof of this</a>,
+common factor) is <img src=6OPISQ.GIF>. <a href=coprime.html>A proof of this</a>,
 using the magnificent Riemann zeta function, is lots of fun.
 <LI>The digits of pi form a random sequence. I have no proof of this, and neither
 does anyone else, because it is patently not true: the digits of pi are very
@@ -50,7 +50,7 @@ Take N digits of the decimal expansion of pi to
 serve as a pool of random digits. From these take samples of pairs of n-digit
 numbers. Count the number of coprime pairs, and after K samples derive an 
 estimate of the probability of a pair being coprime, which is thus an estimate
-for <img src=6opisq.gif>, and hence we can estimate pi itself.
+for <img src=6OPISQ.GIF>, and hence we can estimate pi itself.
 </blockquote>
 
 If N, n and K are all infinite (ha ha) then the result for pi is exact, and the
@@ -84,5 +84,3 @@ I would like to thank Robert A. J. Matthews of the
 who had the idea of using coprimality of random integers
 to compute pi. See "Nature", vol 374, page 681, April 20, 1995.
 <hr>
-<i>Brought to you by <a href="http://www.ccsf.caltech.edu/~roy/">Roy
-Williams Clickery</a></i>
