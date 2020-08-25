@@ -1,0 +1,35 @@
+rect http://www.cacr.caltech.edu/~roy/vermeer/jfh.html   0,  0  95, 95
+rect http://www.cacr.caltech.edu/~roy/vermeer/oie.html  95,  0 190, 95
+rect http://www.cacr.caltech.edu/~roy/vermeer/lww.html 190,  0 285, 95
+rect http://www.cacr.caltech.edu/~roy/vermeer/udn.html 285,  0 380, 95
+rect http://www.cacr.caltech.edu/~roy/vermeer/huh.html 380,  0 475, 95
+rect http://www.cacr.caltech.edu/~roy/vermeer/wwm.html   0, 95  95,190
+rect http://www.cacr.caltech.edu/~roy/vermeer/lek.html  95, 95 190,190
+rect http://www.cacr.caltech.edu/~roy/vermeer/hdy.html 190, 95 285,190
+rect http://www.cacr.caltech.edu/~roy/vermeer/djd.html 285, 95 380,190
+rect http://www.cacr.caltech.edu/~roy/vermeer/wnn.html 380, 95 475,190
+rect http://www.cacr.caltech.edu/~roy/vermeer/ooi.html   0,190  95,285
+rect http://www.cacr.caltech.edu/~roy/vermeer/hcc.html  95,190 190,285
+rect http://www.cacr.caltech.edu/~roy/vermeer/mee.html 190,190 285,285
+rect http://www.cacr.caltech.edu/~roy/vermeer/ych.html 285,190 380,285
+rect http://www.cacr.caltech.edu/~roy/vermeer/quu.html 380,190 475,285
+rect http://www.cacr.caltech.edu/~roy/vermeer/qhh.html   0,285  95,380
+rect http://www.cacr.caltech.edu/~roy/vermeer/ppi.html  95,285 190,380
+rect http://www.cacr.caltech.edu/~roy/vermeer/mnt.html 190,285 285,380
+rect http://www.cacr.caltech.edu/~roy/vermeer/cvv.html 285,285 380,380
+rect http://www.cacr.caltech.edu/~roy/vermeer/xce.html 380,285 475,380
+rect http://www.cacr.caltech.edu/~roy/vermeer/gyc.html   0,380  95,475
+rect http://www.cacr.caltech.edu/~roy/vermeer/wbt.html  95,380 190,475
+rect http://www.cacr.caltech.edu/~roy/vermeer/ycg.html 190,380 285,475
+rect http://www.cacr.caltech.edu/~roy/vermeer/shh.html 285,380 380,475
+rect http://www.cacr.caltech.edu/~roy/vermeer/uyc.html 380,380 475,475
+rect http://www.cacr.caltech.edu/~roy/vermeer/nee.html   0,475  95,570
+rect http://www.cacr.caltech.edu/~roy/vermeer/ucy.html  95,475 190,570
+rect http://www.cacr.caltech.edu/~roy/vermeer/tte.html 190,475 285,570
+rect http://www.cacr.caltech.edu/~roy/vermeer/mwp.html 285,475 380,570
+rect http://www.cacr.caltech.edu/~roy/vermeer/zel.html 380,475 475,570
+rect http://www.cacr.caltech.edu/~roy/vermeer/rcv.html   0,570  95,665
+rect http://www.cacr.caltech.edu/~roy/vermeer/tcr.html  95,570 190,665
+rect http://www.cacr.caltech.edu/~roy/vermeer/qyt.html 190,570 285,665
+rect http://www.cacr.caltech.edu/~roy/vermeer/hgf.html 285,570 380,665
+rect http://www.cacr.caltech.edu/~roy/vermeer/nbe.html 380,570 475,665

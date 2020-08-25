@@ -1,0 +1,15 @@
+default http://www.cacr.caltech.edu/~roy/vermeer/default.html
+rect http://www.cacr.caltech.edu/~roy/vermeer/ams.html 270,114 283 125
+rect http://www.cacr.caltech.edu/~roy/vermeer/ber.html 340,112 351,124
+rect http://www.cacr.caltech.edu/~roy/vermeer/bos.html 111,92  123,106
+rect http://www.cacr.caltech.edu/~roy/vermeer/bra.html 325,115 337,126
+rect http://www.cacr.caltech.edu/~roy/vermeer/dre.html 343,130 355,143
+rect http://www.cacr.caltech.edu/~roy/vermeer/edi.html 198,76 211,89
+rect http://www.cacr.caltech.edu/~roy/vermeer/fra.html 299,134 313,149
+rect http://www.cacr.caltech.edu/~roy/vermeer/hag.html 261,122 274,134
+rect http://www.cacr.caltech.edu/~roy/vermeer/ire.html 170,104 183,117
+rect http://www.cacr.caltech.edu/~roy/vermeer/lon.html 227,124 241,137
+rect http://www.cacr.caltech.edu/~roy/vermeer/new.html 75,108 88,122
+rect http://www.cacr.caltech.edu/~roy/vermeer/par.html 240,157 255,171
+rect http://www.cacr.caltech.edu/~roy/vermeer/vie.html 371,159 386 173
+rect http://www.cacr.caltech.edu/~roy/vermeer/was.html 41,133 54 146
