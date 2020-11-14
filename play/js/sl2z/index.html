@@ -1,0 +1,20 @@
+<h1>A Beautiful Group, SL2(Z)</h1>
+<h3>Move the mouse around!</h3>
+<br/>
+<script src="/lasair/static/sl2z/processing.js"></script>
+<canvas width="1000" height="1000" data-processing-sources="/lasair/static/sl2z/worm.js"></canvas>
+<p>
+<p>
+This page illustrates the effect of transformations in the complex plane.
+The grey canvas shows the upper half-plane (real part from -1 to +1, and imaginary part &gt; 0).
+Everything is driven by the location z of the mouse pointer, with three transformations:
+S: z &rarr; -1/z, T: z &rarr; z+1, and U: z &rarr; z-1. 
+By repeating these <i>ad infinitum</i>, a large set of transformations is generated, specifically the group SL2(Z). 
+More information <a href=https://kconrad.math.uconn.edu/blurbs/grouptheory/SL(2,Z).pdf>from Keith Conrad</a>.
+In this canvas, the colour is more red when T is applied, more green when U is applied, 
+and the blue component is on/off when the number of S transformations is odd/even.
+A point may have several colours if a sequence of transformations brings z back to where it started.
+White lines are the boundaries of the fundamental domains, where only one point can be.
+This group of transformations is especially beautiful in combination with complex analysis, 
+searching for functions that are both differentiable and invariant under SL2(Z) transofrmations. 
+For a wild ride, try <a href=https://www.youtube.com/watch?v=LolxzYwN1TQ>these lectures</a>.
