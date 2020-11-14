@@ -1,6 +1,6 @@
-var midx = 600;
-var maxy = 900;
-var scale = 600.0;
+var midx = 500;
+var maxy = 700;
+var scale = 500.0;
 var max = 9;
 var x;
 var y;
